@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0074cc;
+        }
+
+        #converter {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: slide-in 0.5s ease-in-out;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #0074cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #result {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@16.14.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        class TemperatureConverter extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    conversionType: 'celsiusToFahrenheit',
+                    inputValue: '',
+                    resultValue: ''
+                };
+            }
+
+            handleConversionTypeChange(event) {
+                this.setState({ conversionType: event.target.value });
+            }
+
+            handleInputChange(event) {
+                this.setState({ inputValue: event.target.value });
+            }
+
+            convertTemperature() {
+                const { inputValue, conversionType } = this.state;
+                if (inputValue === '') {
+                    alert('Please enter a value.');
+                    return;
+                }
+
+                if (conversionType === 'celsiusToFahrenheit') {
+                    const celsius = parseFloat(inputValue);
+                    const fahrenheit = (celsius * 9/5) + 32;
+                    this.setState({ resultValue: fahrenheit.toFixed(2) + '°F' });
+                } else {
+                    const fahrenheit = parseFloat(inputValue);
+                    const celsius = (fahrenheit - 32) * 5/9;
+                    this.setState({ resultValue: celsius.toFixed(2) + '°C' });
+                }
+            }
+
+            render() {
+                return (
+                    <div id="converter">
+                        <h1>Temperature Converter</h1>
+                        <label htmlFor="conversionType">Choose Conversion:</label>
+                        <select
+                            id="conversionType"
+                            value={this.state.conversionType}
+                            onChange={(e) => this.handleConversionTypeChange(e)}
+                        >
+                            <option value="celsiusToFahrenheit">Celsius to Fahrenheit</option>
+                            <option value="fahrenheitToCelsius">Fahrenheit to Celsius</option>
+                        </select>
+                        <label htmlFor="temperatureValue">Temperature:</label>
+                        <input
+                            type="text"
+                            id="temperatureValue"
+                            value={this.state.inputValue}
+                            onChange={(e) => this.handleInputChange(e)}
+                        />
+                        <button onClick={() => this.convertTemperature()}>Convert</button>
+                        <div id="result">{this.state.resultValue}</div>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<TemperatureConverter />, document.getElementById('root'));
+    </script>
+</body>
+</html>
